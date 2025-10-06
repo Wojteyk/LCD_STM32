@@ -1,0 +1,11 @@
+../Core/Src/lcd.c:38:13:lcdCmd	16	static
+../Core/Src/lcd.c:46:13:lcdData	16	static
+../Core/Src/lcd.c:54:13:lcdSend	16	static
+../Core/Src/lcd.c:65:13:lcdData16	16	static
+../Core/Src/lcd.c:71:13:lcdSetWindow	24	static
+../Core/Src/lcd.c:105:6:lcdInit	16	static
+../Core/Src/lcd.c:127:6:lcdFillPixel	24	static
+../Core/Src/lcd.c:132:6:lcdCopy	8	static
+../Core/Src/lcd.c:143:6:lcdDrawLine	48	static
+../Core/Src/lcd.c:172:6:lcdDrawRectangle	32	static
+../Core/Src/lcd.c:180:6:lcdFillRectangle	32	static
