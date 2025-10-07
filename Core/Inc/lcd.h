@@ -77,3 +77,22 @@ void lcdDrawRectangle(int x, int y, int width, int heigth, uint16_t color);
  */
 void lcdFillRectangle(int x, int y, int width, int heigth, uint16_t color);
 
+
+/**
+ * @brief Draws the outline of a circle.
+ * @param x0 X coordinate of the circle center
+ * @param y0 Y coordinate of the circle center
+ * @param radius Circle radius in pixels
+ * @param color 16-bit RGB565 color value
+ */
+void lcdDrawCircle(int x0, int y0, int radius, uint16_t color);
+
+/**
+ * @brief Draws a filled circle.
+ * @param x0 X coordinate of the circle center
+ * @param y0 Y coordinate of the circle center
+ * @param radius Circle radius in pixels
+ * @param color 16-bit RGB565 color value
+ */
+void lcdFillCircle(int x0, int y0, int radius, uint16_t color);
+

@@ -103,12 +103,18 @@ int main(void)
     }
   }
 
-  lcdDrawLine(10, 10, 20, 20, YELLOW);
-  lcdDrawLine(20, 20, 30, 30, BLUE);
-  lcdDrawLine(30, 30, 40, 40, RED);
-  lcdDrawRectangle(10, 10, 40, 50, BLUE);
-  lcdFillRectangle(10, 60, 30, 30, RED);
+//  lcdDrawLine(10, 10, 20, 20, YELLOW);
+//  lcdDrawLine(20, 20, 30, 30, BLUE);
+//  lcdDrawLine(30, 30, 40, 40, RED);
+//  lcdDrawRectangle(10, 10, 40, 50, BLUE);
+//  lcdFillRectangle(10, 60, 30, 30, RED);
+
+  lcdDrawCircle(40, 40, 10, RED);
+
+  lcdFillCircle(100, 100, 10, BLUE);
+
   lcdCopy();
+
 
   while (1)
   {

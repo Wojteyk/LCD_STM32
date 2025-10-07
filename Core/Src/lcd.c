@@ -186,6 +186,58 @@ void lcdFillRectangle(int x, int y, int width, int heigth, uint16_t color)
 	}
 }
 
+void lcdDrawCircle(int x0, int y0, int radius, uint16_t color)
+{
+	// Bresenham algorithm
+    int x = 0;
+    int y = radius;
+    int d = 1 - radius;
+
+    while (y >= x) {
+
+    	lcdFillPixel(x0 + x, y0 + y, color);
+    	lcdFillPixel(x0 + y, y0 + x, color);
+    	lcdFillPixel(x0 - x, y0 + y, color);
+    	lcdFillPixel(x0 - y, y0 + x, color);
+    	lcdFillPixel(x0 + x, y0 - y, color);
+    	lcdFillPixel(x0 + y, y0 - x, color);
+    	lcdFillPixel(x0 - x, y0 - y, color);
+    	lcdFillPixel(x0 - y, y0 - x, color);
+
+        x++;
+        if (d < 0) {
+            d += 2 * x + 1;
+        } else {
+            y--;
+            d += 2 * (x - y) + 1;
+        }
+    }
+}
+
+void lcdFillCircle(int x0, int y0, int radius, uint16_t color) {
+
+	// Bresenham algorithm
+    int x = 0;
+    int y = radius;
+    int d = 1 - radius;
+
+    while (y >= x) {
+
+        lcdDrawLine(x0 - x, y0 - y, x0 + x, y0 - y, color);
+        lcdDrawLine(x0 - x, y0 + y, x0 + x, y0 + y, color);
+        lcdDrawLine(x0 - y, y0 - x, x0 + y, y0 - x, color);
+        lcdDrawLine(x0 - y, y0 + x, x0 + y, y0 + x, color);
+
+        x++;
+
+        if (d < 0) {
+            d += 2 * x + 1;
+        } else {
+            y--;
+            d += 2 * (x - y) + 1;
+        }
+    }
+}
 
 
 
