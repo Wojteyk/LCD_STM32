@@ -109,9 +109,12 @@ int main(void)
 //  lcdDrawRectangle(10, 10, 40, 50, BLUE);
 //  lcdFillRectangle(10, 60, 30, 30, RED);
 
-  lcdDrawCircle(40, 40, 10, RED);
 
-  lcdFillCircle(100, 100, 10, BLUE);
+  	lcdFillRoundRectangle(20, 20, 100, 25, 6, BLUE);
+
+  	lcdDrawText(100, 50, "Hellu!", GREEN, BLACK);
+
+  	lcdDrawCircle(20, 50, 2, RED);
 
   lcdCopy();
 

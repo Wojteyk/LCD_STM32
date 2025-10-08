@@ -324,6 +324,59 @@ void lcdFillRoundRectangle(int x0, int y0, int width, int height, int radius, ui
     }
 }
 
+static void lcdDrawChar(int x0, int y0, char c, uint16_t color, uint16_t bgColor)
+{
+	if(c < 32 || c > 126) return; // check if char is in between 32-126(ASCII)
+
+	for(int i = 0; i < FONT_WIDTH; i++)
+	{
+		uint8_t line = font[c-32][i];
+
+		for(int j = 0; j < FONT_HEIGHT; j++)
+		{
+			if((line >> j) & 1)
+			{
+				lcdFillPixel(x0 + i, y0 + j, color);
+			}
+			else
+			{
+				lcdFillPixel(x0 + i, y0 + j, bgColor);
+			}
+		}
+	}
+
+
+
+}
+
+void lcdDrawText(int x0, int y0, const char* str, uint16_t color, uint16_t bgColor)
+{
+	int x = x0;
+	int y = y0;
+
+	while(*str)
+	{
+		if(*str == '\n')
+		{
+			y += FONT_HEIGHT + 2;
+			x = x0;
+		}
+		else
+		{
+			lcdDrawChar(x, y, *str, color, bgColor);
+			x += FONT_WIDTH + 1;
+		}
+
+		if(x + FONT_WIDTH >= LCD_WIDTH)
+		{	// text wrapping if go beyond lcd width
+			y += FONT_HEIGHT + 2;
+			x = x0;
+		}
+
+		str++;
+	}
+}
+
 
 
 

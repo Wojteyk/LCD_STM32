@@ -12,6 +12,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <font.h>
 
 // Dispaly dimensions
 #define LCD_WIDTH 160
@@ -117,6 +118,17 @@ void lcdDrawRoundRectangle(int x0, int y0, int width, int height, int radius, ui
  * @param color  16-bit RGB565 color value
  */
 void lcdFillRoundRectangle(int x0, int y0, int width, int height, int radius, uint16_t color);
+
+
+/**
+ * @brief Draws a string of text on the screen.
+ * @param x0      X coordinate of the top-left corner of the text
+ * @param y0      Y coordinate of the top-left corner of the text
+ * @param str     Pointer to the null-terminated string to be drawn
+ * @param color   16-bit RGB565 color value for the text
+ * @param bgColor 16-bit RGB565 color value for the background
+ */
+void lcdDrawText(int x0, int y0, const char* str, uint16_t color, uint16_t bgColor);
 
 
 
