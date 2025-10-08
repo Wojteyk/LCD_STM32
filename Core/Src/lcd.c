@@ -169,18 +169,18 @@ void lcdDrawLine(int x0, int y0, int x1, int y1, uint16_t color)
 	}
 }
 
-void lcdDrawRectangle(int x, int y, int width, int heigth, uint16_t color)
+void lcdDrawRectangle(int x, int y, int width, int height, uint16_t color)
 {
 	lcdDrawLine(x, y, x + width, y, color);
-	lcdDrawLine(x, y, x, y + heigth, color);
-	lcdDrawLine(x + width, y, x + width, y + heigth, color);
-	lcdDrawLine(x, y + heigth, x + width, y + heigth, color);
+	lcdDrawLine(x, y, x, y + height, color);
+	lcdDrawLine(x + width, y, x + width, y + height, color);
+	lcdDrawLine(x, y + height, x + width, y + height, color);
 }
 
-void lcdFillRectangle(int x, int y, int width, int heigth, uint16_t color)
+void lcdFillRectangle(int x, int y, int width, int height, uint16_t color)
 {
 	for(int i=0; i < width; i++){
-		for(int j = 0; j < heigth; j++){
+		for(int j = 0; j < height; j++){
 			lcdFillPixel(x + i, y + j, color);
 		}
 	}
@@ -238,6 +238,110 @@ void lcdFillCircle(int x0, int y0, int radius, uint16_t color) {
         }
     }
 }
+
+void lcdDrawRoundRectangle(int x0, int y0, int width, int height, int radius, uint16_t color)
+{
+
+	int correctedWidth = width - 1;
+	int correctedHeight = height - 1;
+
+	lcdDrawLine(x0 + radius, y0, x0 + width - radius, y0, color);
+
+	lcdDrawLine(x0 + radius, y0 + height, x0 + width - radius, y0 + height, color);
+
+	lcdDrawLine(x0, y0 + radius, x0, y0 + height - radius, color);
+
+	lcdDrawLine(x0 + width, y0 + radius, x0 + width, y0 + height - radius, color);
+
+
+	int x = 0;
+	int y = radius;
+	int d = 1 - radius;
+
+	while (y >= x)
+	{
+
+		// Lower right corner
+		lcdFillPixel(x0 - (radius - correctedWidth) + x, y0 - (radius - correctedHeight) + y, color);
+		lcdFillPixel(x0 - (radius - correctedWidth) + y, y0 - (radius - correctedHeight) + x, color);
+
+		// Upper right corner
+		lcdFillPixel(x0 - (radius - correctedWidth) + x, y0 + radius - y, color);
+		lcdFillPixel(x0 - (radius - correctedWidth) + y, y0 + radius - x, color);
+
+		//Lower left corner
+		lcdFillPixel(x0 + radius - x, y0 - (radius - correctedHeight) + y, color);
+		lcdFillPixel(x0 + radius - y, y0 - (radius - correctedHeight) + x, color);
+
+		// Upper left corner
+		lcdFillPixel(x0 + radius - x, y0 + radius - y, color);
+		lcdFillPixel(x0 + radius - y, y0 + radius - x, color);
+
+		x++;
+		if(d <= 0)
+		{
+			d += 2 * x +1;
+		}
+		else
+		{
+			y--;
+			d += 2 * (x -y) + 1;
+		}
+	}
+}
+
+void lcdFillRoundRectangle(int x0, int y0, int width, int height, int radius, uint16_t color)
+{
+	int correctedWidth = width - 1;
+	int correctedHeight = height - 1;
+
+    lcdFillRectangle(x0, y0 + radius, width, height - 2 * radius, color);
+
+
+    int x = 0;
+    int y = radius;
+    int d = 1 - radius;
+
+    while (y >= x)
+    {
+    	// Drawing corners
+        lcdDrawLine((x0 + radius) - x, (y0 + radius) - y, (x0 + correctedWidth - radius) + x, (y0 + radius) - y, color); // Upper
+        lcdDrawLine((x0 + radius) - y, (y0 + radius) - x, (x0 + correctedWidth - radius) + y, (y0 + radius) - x, color); // Upper
+
+        lcdDrawLine((x0 + radius) - x, (y0 + correctedHeight - radius) + y, (x0 + correctedWidth - radius) + x, (y0 + correctedHeight - radius) + y, color); // Lower
+        lcdDrawLine((x0 + radius) - y, (y0 + correctedHeight - radius) + x, (x0 + correctedWidth - radius) + y, (y0 + correctedHeight - radius) + x, color); // Lower
+
+        x++;
+        if(d <= 0)
+        {
+            d += 2 * x + 1;
+        }
+        else
+        {
+            y--;
+            d += 2 * (x - y) + 1;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -65,7 +65,7 @@ void lcdDrawLine(int x0, int x1, int y0, int y1, uint16_t color);
  * @param height Rectangle height in pixels
  * @param color 16-bit RGB565 color value
  */
-void lcdDrawRectangle(int x, int y, int width, int heigth, uint16_t color);
+void lcdDrawRectangle(int x, int y, int width, int height, uint16_t color);
 
 /**
  * @brief Draws a filled rectangle.
@@ -75,7 +75,7 @@ void lcdDrawRectangle(int x, int y, int width, int heigth, uint16_t color);
  * @param height Rectangle height in pixels
  * @param color 16-bit RGB565 color value
  */
-void lcdFillRectangle(int x, int y, int width, int heigth, uint16_t color);
+void lcdFillRectangle(int x, int y, int width, int height, uint16_t color);
 
 
 /**
@@ -95,4 +95,28 @@ void lcdDrawCircle(int x0, int y0, int radius, uint16_t color);
  * @param color 16-bit RGB565 color value
  */
 void lcdFillCircle(int x0, int y0, int radius, uint16_t color);
+
+/**
+ * @brief Draws the outline of a rectangle with rounded corners.
+ * @param x0     X coordinate of the top-left corner
+ * @param y0     Y coordinate of the top-left corner
+ * @param width  Total width of the rectangle in pixels
+ * @param height Total height of the rectangle in pixels
+ * @param radius Radius of the corners in pixels
+ * @param color  16-bit RGB565 color value
+ */
+void lcdDrawRoundRectangle(int x0, int y0, int width, int height, int radius, uint16_t color);
+
+/**
+ * @brief Draws a filled rectangle with rounded corners.
+ * @param x0     X coordinate of the top-left corner
+ * @param y0     Y coordinate of the top-left corner
+ * @param width  Total width of the rectangle in pixels
+ * @param height Total height of the rectangle in pixels
+ * @param radius Radius of the corners in pixels
+ * @param color  16-bit RGB565 color value
+ */
+void lcdFillRoundRectangle(int x0, int y0, int width, int height, int radius, uint16_t color);
+
+
 
