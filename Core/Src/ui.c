@@ -7,6 +7,7 @@
 #include "ui.h"
 
 static const Page *currentPage = NULL;
+int currentButtonIndex = 0;
 
 static Button returnButton ={
 	.x = 7,
@@ -31,7 +32,7 @@ static Button homeButton1 ={
 	.text = "Ustawienia",
 	.textColor = BLACK,
 	.bgColor = BLUE,
-	.onClick = NULL
+	.onClick = Action_GoToSettings
 };
 
 static Button homeButton2={
@@ -129,8 +130,28 @@ const Page settingsPage = {
 
 // ------------------------------------------------------
 
-static void Ui_DrawButton(const Button *btn)
+static void Ui_DrawButton(const Button *btn, uint8_t isHighlited)
 {
+
+	if(isHighlited)
+	{
+		//draw highlithed button
+		lcdFillRoundRectangle(btn->x,
+							  btn->y,
+							  btn->width,
+							  btn->height,
+							  btn->radius,
+							  HIGHLIGHT_COLOR);
+
+		//draw text center aligned
+			lcdDrawText(btn->x + (btn->width - ((FONT_WIDTH+1)*strlen(btn->text)))/2,
+						btn->y + (btn->height - FONT_HEIGHT)/2,
+						btn->text,
+						btn->textColor,
+						HIGHLIGHT_COLOR);
+	}
+	else
+	{
 	//draw button
 	lcdFillRoundRectangle(btn->x,
 						  btn->y,
@@ -138,21 +159,27 @@ static void Ui_DrawButton(const Button *btn)
 						  btn->height,
 						  btn->radius,
 						  btn->bgColor);
+
 	//draw text center aligned
 	lcdDrawText(btn->x + (btn->width - ((FONT_WIDTH+1)*strlen(btn->text)))/2,
 				btn->y + (btn->height - FONT_HEIGHT)/2,
 				btn->text,
 				btn->textColor,
 				btn->bgColor);
+	}
 }
 
 void Ui_DrawPage(){
 	if(currentPage == NULL) return;
 
+	lcdFillBackground(BACKGROUND_COLOR);
+
 	for(size_t i =0; i < currentPage->buttonCount; i++)
 	{
-		Ui_DrawButton(currentPage->buttons[i]);
+		uint8_t isHihglithed  = (i == currentButtonIndex);
+		Ui_DrawButton(currentPage->buttons[i], isHihglithed);
 	}
+	lcdCopy();
 }
 
 void Ui_SetCurrentPage(const Page *newPage)
@@ -178,6 +205,17 @@ void Ui_ChangeMenuTheme( uint16_t changedTextColor, uint16_t changedBgColor)
 			settingsButtons[i]->textColor = changedTextColor;
 			settingsButtons[i]->bgColor = changedBgColor;
 		}
+}
+
+void Ui_MoveHighlightDown()
+{
+	if(currentPage == NULL || currentPage->buttonCount == 0) return;
+
+	currentButtonIndex++;
+
+	if(currentButtonIndex == currentPage->buttonCount) currentButtonIndex =0;
+
+	Ui_DrawPage(currentPage);
 }
 
 

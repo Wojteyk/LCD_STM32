@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "lcd.h"
+#include "ui_handler.h"
 
 #define BTN_DEFAULT_WIDTH      100
 #define BTN_DEFAULT_HEIGHT     25
@@ -19,12 +20,15 @@
 #define BTN_RETURN_HEIGHT     16
 #define BTN_RETURN_RADIUS     4
 
+#define HIGHLIGHT_COLOR 	  WHITE
+#define BACKGROUND_COLOR   	  BLACK
+
 /**
  * @brief Structure representing an interactive menu button.
  *
  * Contains all parameters necessary for drawing and handling user interaction.
  */
-typedef struct {
+typedef struct Button {
 	int x;                 ///< X position (top-left corner).
 	int y;                 ///< Y position (top-left corner).
 	int width;             ///< The width of the button.
@@ -35,7 +39,7 @@ typedef struct {
 	uint16_t textColor;    ///< 16-bit text color (RGB565).
 	uint16_t bgColor;      ///< 16-bit background color (RGB565).
 
-	void(*onClick)(void);  ///< Pointer to the callback function executed upon press.
+	void(*onClick)(struct Button *self);  ///< Pointer to the callback function executed upon press.
 } Button;
 
 
@@ -57,4 +61,10 @@ void Ui_DrawPage();
 void Ui_SetCurrentPage(const Page *newPage);
 
 void Ui_ChangeMenuTheme( uint16_t btnTextColor, uint16_t btnBgColor);
+
+void Ui_MoveHighlightDown();
+
+
+
+
 
