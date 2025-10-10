@@ -7,7 +7,10 @@
 #include "ui.h"
 
 static const Page *currentPage = NULL;
-int currentButtonIndex = 0;
+static int currentButtonIndex = 0;
+
+static void Action_GoToSettings(Button *self);
+
 
 static Button returnButton ={
 	.x = 7,
@@ -130,6 +133,23 @@ const Page settingsPage = {
 
 // ------------------------------------------------------
 
+static void Action_GoToSettings(Button *self)
+{
+	Ui_SetCurrentPage(&settingsPage);
+}
+
+static void Ui_ExecuteAction()
+{
+	if(currentPage == NULL || currentPage->buttonCount == 0) return;
+
+	// choose highlithed button
+	Button *btn = currentPage->buttons[currentButtonIndex];
+
+	if(btn->onClick != NULL){
+		btn->onClick(btn);
+	}
+}
+
 static void Ui_DrawButton(const Button *btn, uint8_t isHighlited)
 {
 
@@ -205,6 +225,8 @@ void Ui_ChangeMenuTheme( uint16_t changedTextColor, uint16_t changedBgColor)
 			settingsButtons[i]->textColor = changedTextColor;
 			settingsButtons[i]->bgColor = changedBgColor;
 		}
+
+	Ui_DrawPage();
 }
 
 void Ui_MoveHighlightDown()
@@ -215,9 +237,19 @@ void Ui_MoveHighlightDown()
 
 	if(currentButtonIndex == currentPage->buttonCount) currentButtonIndex =0;
 
-	Ui_DrawPage(currentPage);
+	Ui_DrawPage();
 }
 
+void Ui_FSM_ShortPressActionDetected()
+{
+	Ui_MoveHighlightDown();
+}
+
+
+void Ui_FSM_LongPressActionDetected()
+{
+	Ui_ExecuteAction();
+}
 
 
 

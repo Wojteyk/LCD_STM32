@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "lcd.h"
-#include "ui_handler.h"
 
 #define BTN_DEFAULT_WIDTH      100
 #define BTN_DEFAULT_HEIGHT     25
@@ -58,11 +57,38 @@ typedef struct {
  */
 void Ui_DrawPage();
 
+/**
+ * @brief Sets a new page as the active view, resetting the highlight state.
+ * @param newPage Pointer to the Page structure to activate.
+ */
 void Ui_SetCurrentPage(const Page *newPage);
 
+/**
+ * @brief Changes the background and text color theme for ALL buttons in the application.
+ * * Ui_DrawPage is called afterwards for changes to become visible.
+ * @param btnTextColor New 16-bit text color (RGB565).
+ * @param btnBgColor New 16-bit background color (RGB565).
+ */
 void Ui_ChangeMenuTheme( uint16_t btnTextColor, uint16_t btnBgColor);
 
+/**
+ * @brief Moves the highlight (cursor) to the next button in the list.
+ * * If the highlight reaches the end of the list, it wraps back to the first element.
+ */
 void Ui_MoveHighlightDown();
+
+/**
+ * @brief Callback invoked by the button Finite State Machine (FSM) upon detecting a stable short press.
+ * * This function maps the FSM event to the 'onClick' action of the currently highlighted button.
+ */
+void Ui_FSM_ShortPressActionDetected();
+
+/**
+ * @brief Callback invoked by the button Finite State Machine (FSM) upon detecting a stable long press event.
+ * * This function is defined in the UI core module (ui.c) to handle the resulting action,
+ * which often triggers continuous actions or a different page flow.
+ */
+void Ui_FSM_LongPressActionDetected();
 
 
 

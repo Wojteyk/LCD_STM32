@@ -1,12 +1,13 @@
 #pragma once
 
 #include <stdint.h>
+#include "ui.h"
 
 /** @brief Minimum time (in ms) required for the button signal to stabilize (debounce). */
 #define DEBOUNCE_TIME_MS	50
 
 /** @brief Time (in ms) after which a press is classified as a long press. */
-#define LONG_PRESS_TIME_MS	1000
+#define LONG_PRESS_TIME_MS	800
 
 
 /**
@@ -19,12 +20,6 @@ typedef enum {
 	LONG_PRESS_WAIT     /**< Long press action has occurred; waiting for the physical button to be released. */
 } ButtonState;
 
-/** @brief The current state of the button's FSM. */
-extern ButtonState currentState;
-
-/** @brief The time (HAL_GetTick() value in ms) when the stable press started. */
-extern uint32_t pressStartTime;
-
 /**
  * @brief The main execution function for the button FSM.
  * * This function must be called periodically in the main loop (polling)
@@ -32,3 +27,18 @@ extern uint32_t pressStartTime;
  * pin state and press duration.
  */
 void button_CheckState();
+
+/**
+ * @brief Callback invoked by the button Finite State Machine (FSM) upon detecting a stable short press.
+ * * This function is defined in the UI core module (ui.c) to handle the resulting action,
+ * which involves executing the 'onClick' action of the currently highlighted button.
+ */
+extern void Ui_FSM_ShortPressActionDetected();
+
+/**
+ * @brief Callback function executed by the FSM upon detecting a stable long press event.
+ * * This function is defined in the UI core module (ui.c) to handle the resulting action.
+ */
+extern void Ui_FSM_LongPressActionDetected();
+
+

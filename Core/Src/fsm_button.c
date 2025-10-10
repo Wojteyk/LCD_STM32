@@ -7,6 +7,10 @@
 #include "fsm_button.h"
 #include "main.h"
 
+static ButtonState currentState;
+
+static uint32_t pressStartTime;
+
 static uint8_t buttonIsPressed()
 {
 	return !HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin);
@@ -39,11 +43,11 @@ void button_CheckState()
 
 	case PRESSED:
 		if(!isCurrentlyPressed){
-			//action press();
+			Ui_FSM_ShortPressActionDetected();
 			currentState = IDLE;
 		}
 		else if ((currentTime - pressStartTime) > LONG_PRESS_TIME_MS){
-			// action long press();
+			Ui_FSM_LongPressActionDetected();
 			currentState = LONG_PRESS_WAIT;
 		}
 		break;
