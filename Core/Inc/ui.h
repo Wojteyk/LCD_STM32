@@ -41,3 +41,6 @@ typedef struct {
  * within the ui.c module (e.g., firstButton, secondButton, thirdButton).
  */
 void Ui_DrawMenu();
+
+void Ui_ChangeMenuTheme( uint16_t btnTextColor, uint16_t btnBgColor);
+
