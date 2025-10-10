@@ -49,6 +49,12 @@ void lcdFillPixel(int x, int y, uint16_t color);
 void lcdInit();
 
 /**
+ * @brief Fills the entire LCD screen with a single, specified color.
+ * @param color 16-bit RGB565 color value to fill the background with.
+ */
+void lcdFillBackground(uint16_t color);
+
+/**
  * @brief Draws a straight line between two points.
  * @param x0 Starting X coordinate
  * @param x1 Ending X coordinate

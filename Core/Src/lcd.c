@@ -140,6 +140,17 @@ void lcdCopy()
 
 }
 
+void lcdFillBackground(uint16_t color)
+{
+	for (int y = 0; y < LCD_HEIGHT; y++)
+	{
+	    for (int x = 0; x < LCD_WIDTH; x++)
+	    {
+	      lcdFillPixel(x, y, color);
+	    }
+	}
+}
+
 void lcdDrawLine(int x0, int y0, int x1, int y1, uint16_t color)
 {
 	int dx = abs(x1 - x0);
