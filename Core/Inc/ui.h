@@ -15,6 +15,10 @@
 #define BTN_DEFAULT_HEIGHT     25
 #define BTN_DEFAULT_RADIUS     8
 
+#define BTN_RETURN_WIDTH      16
+#define BTN_RETURN_HEIGHT     16
+#define BTN_RETURN_RADIUS     4
+
 /**
  * @brief Structure representing an interactive menu button.
  *
@@ -32,7 +36,15 @@ typedef struct {
 	uint16_t bgColor;      ///< 16-bit background color (RGB565).
 
 	void(*onClick)(void);  ///< Pointer to the callback function executed upon press.
-} Button_menu;
+} Button;
+
+
+typedef struct {
+
+	Button* const *buttons;
+	size_t buttonCount;
+
+}Page;
 
 /**
  * @brief Draws the entire UI menu using predefined global Button_menu instances.
@@ -40,7 +52,9 @@ typedef struct {
  * This function calls the drawing routines for all buttons defined
  * within the ui.c module (e.g., firstButton, secondButton, thirdButton).
  */
-void Ui_DrawMenu();
+void Ui_DrawPage();
+
+void Ui_SetCurrentPage(const Page *newPage);
 
 void Ui_ChangeMenuTheme( uint16_t btnTextColor, uint16_t btnBgColor);
 
