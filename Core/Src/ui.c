@@ -6,8 +6,40 @@
  */
 #include "ui.h"
 
+  Button_menu firstButton = {
+	  .x = 30,
+	  .y = 15,
+	  .width = BTN_DEFAULT_WIDTH,
+	  .height = BTN_DEFAULT_HEIGHT,
+	  .radius = BTN_DEFAULT_RADIUS,
+	  .text = "Ustawienia",
+	  .textColor = BLACK,
+	  .bgColor = BLUE
+  };
 
-void Ui_DrawButton(const Button_menu *btn)
+  Button_menu secondButton = {
+  	  .x = 30,
+  	  .y = 50,
+  	  .width = BTN_DEFAULT_WIDTH,
+  	  .height = BTN_DEFAULT_HEIGHT,
+  	  .radius = BTN_DEFAULT_RADIUS,
+  	  .text = "Telefon",
+  	  .textColor = BLACK,
+  	  .bgColor = BLUE
+    };
+
+  Button_menu thirdButton = {
+    	  .x = 30,
+    	  .y = 85,
+    	  .width = BTN_DEFAULT_WIDTH,
+    	  .height = BTN_DEFAULT_HEIGHT,
+    	  .radius = BTN_DEFAULT_RADIUS,
+    	  .text = "Temperatura",
+    	  .textColor = BLACK,
+    	  .bgColor = BLUE
+      };
+
+static void Ui_DrawButton(const Button_menu *btn)
 {
 	//draw button
 	lcdFillRoundRectangle(btn->x,
@@ -22,6 +54,10 @@ void Ui_DrawButton(const Button_menu *btn)
 				btn->text,
 				btn->textColor,
 				btn->bgColor);
-
 }
 
+void Ui_DrawMenu(){
+	Ui_DrawButton(&firstButton);
+	Ui_DrawButton(&secondButton);
+	Ui_DrawButton(&thirdButton);
+}
