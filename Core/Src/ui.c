@@ -8,9 +8,27 @@
 
 static const Page *currentPage = NULL;
 static int currentButtonIndex = 0;
+static int currentThemeIndex = 0;
+
+//   ------- Function declarations ------
 
 static void Action_GoToSettings(Button *self);
 
+static void Action_GoBack(Button *self);
+
+static void Action_ChangeTheme(Button *self);
+
+//   ------- Themes ------
+
+static const Theme themes[] = {
+		{.textColor = BLACK, .bgColor = BLUE},
+		{.textColor = BLACK, .bgColor = RED},
+		{.textColor = BLACK, .bgColor = GREEN},
+};
+
+#define Num_Of_Themes (sizeof(themes) / sizeof(themes[0]))
+
+//   ------- Return Button ------
 
 static Button returnButton ={
 	.x = 7,
@@ -21,7 +39,7 @@ static Button returnButton ={
 	.text = "<",
 	.textColor = BLACK,
 	.bgColor = RED,
-	.onClick = NULL
+	.onClick = Action_GoBack
 };
 
 //   ------- HOME PAGE ------
@@ -87,7 +105,7 @@ static Button settingsButton1 ={
 	.text = "Zmaiana motywu",
 	.textColor = BLACK,
 	.bgColor = BLUE,
-	.onClick = NULL
+	.onClick = Action_ChangeTheme
 };
 
 static Button settingsButton2={
@@ -129,13 +147,23 @@ const Page settingsPage = {
 		  .buttonCount = Num_Of_Settings_Buttons
 };
 
-
-
 // ------------------------------------------------------
+
+static void Action_ChangeTheme(Button *self)
+{
+	currentThemeIndex = (currentThemeIndex + 1) % Num_Of_Themes;
+
+	Ui_ChangeMenuTheme(themes[currentThemeIndex].textColor, themes[currentThemeIndex].bgColor);
+}
 
 static void Action_GoToSettings(Button *self)
 {
 	Ui_SetCurrentPage(&settingsPage);
+}
+
+static void Action_GoBack(Button *self)
+{
+	Ui_SetCurrentPage(&homePage);
 }
 
 static void Ui_ExecuteAction()
@@ -190,6 +218,7 @@ static void Ui_DrawButton(const Button *btn, uint8_t isHighlited)
 }
 
 void Ui_DrawPage(){
+
 	if(currentPage == NULL) return;
 
 	lcdFillBackground(BACKGROUND_COLOR);
@@ -207,6 +236,7 @@ void Ui_SetCurrentPage(const Page *newPage)
 	if(newPage == NULL) return;
 
 	currentPage = newPage;
+	currentButtonIndex = 0;
 
 	Ui_DrawPage();
 }
@@ -235,7 +265,7 @@ void Ui_MoveHighlightDown()
 
 	currentButtonIndex++;
 
-	if(currentButtonIndex == currentPage->buttonCount) currentButtonIndex =0;
+	if(currentButtonIndex == currentPage->buttonCount) currentButtonIndex = 0;
 
 	Ui_DrawPage();
 }

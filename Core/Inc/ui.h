@@ -49,6 +49,11 @@ typedef struct {
 
 }Page;
 
+typedef struct {
+    uint16_t textColor;
+    uint16_t bgColor;
+} Theme;
+
 /**
  * @brief Draws the entire UI menu using predefined global Button_menu instances.
  *

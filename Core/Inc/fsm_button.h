@@ -7,8 +7,7 @@
 #define DEBOUNCE_TIME_MS	50
 
 /** @brief Time (in ms) after which a press is classified as a long press. */
-#define LONG_PRESS_TIME_MS	800
-
+#define LONG_PRESS_TIME_MS	600
 
 /**
  * @brief Defines the states of the button Finite State Machine (FSM).
