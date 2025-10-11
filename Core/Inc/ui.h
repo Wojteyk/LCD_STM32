@@ -42,17 +42,22 @@ typedef struct Button {
 	void(*onClick)(struct Button *self);  ///< Pointer to the callback function executed upon press.
 } Button;
 
-
+/**
+ * @brief Represents a single screen or view in the UI.
+ * @details Contains a collection of buttons that are displayed together on the screen.
+ */
 typedef struct {
+	Button* const *buttons; ///< A constant array of pointers to the Button structures on this page.
+	size_t buttonCount;     ///< The total number of buttons in the 'buttons' array.
+} Page;
 
-	Button* const *buttons;
-	size_t buttonCount;
-
-}Page;
-
+/**
+ * @brief Defines a color theme for UI elements.
+ * @details Contains colors for text and backgrounds, used for changing themes.
+ */
 typedef struct {
-    uint16_t textColor;
-    uint16_t bgColor;
+    uint16_t textColor;     ///< The 16-bit text color (RGB565).
+    uint16_t bgColor;       ///< The 16-bit background color for buttons (RGB565).
 } Theme;
 
 /**

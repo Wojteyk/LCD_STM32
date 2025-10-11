@@ -6,17 +6,68 @@
  */
 #include "ui.h"
 
+// --- Static Global Variables ---
+
+/// @brief Pointer to the currently displayed page.
 static const Page *currentPage = NULL;
+/// @brief Index of the currently highlighted button on the currentPage.
 static int currentButtonIndex = 0;
+/// @brief Index of the currently active color theme.
 static int currentThemeIndex = 0;
+/// @brief Index of the currently selected brightness level.
 static int currentBrightnesIndex = 0;
 
 //   ------- Function declarations ------
 
-static void Action_GoToSettings(Button *self);
-static void Action_GoBack(Button *self);
-static void Action_ChangeTheme(Button *self);
-static void Action_ChangeBrightness(Button *self);
+/**
+ * @brief Draws a single button on the screen.
+ * @details Renders a rounded rectangle for the button body and centers the text.
+ * The button is drawn with a different background color if it is highlighted.
+ * @param btn Pointer to the constant Button object to draw.
+ * @param isHighlited Flag indicating if the button is currently selected (1) or not (0).
+ */
+static void Ui_DrawButton(const Button *btn, uint8_t isHighlited);
+
+/**
+ * @brief Executes the action associated with the currently highlighted button.
+ * @details This function is typically called in response to a long press event.
+ * It retrieves the highlighted button from the current page and, if an
+ * `onClick` callback is assigned, it invokes that function.
+ * @retval None
+ */
+static void Ui_ExecuteAction();
+
+/**
+ * @brief Navigates the user interface to the settings page.
+ * @details This is a callback function assigned to a button's `onClick` handler.
+ * It calls `Ui_SetCurrentPage` to display the `settingsPage`.
+ * @retval None
+ */
+static void Action_GoToSettings();
+
+/**
+ * @brief Navigates the user interface back to the home page.
+ * @details This is a callback function for a "return" or "back" button.
+ * It calls `Ui_SetCurrentPage` to display the `homePage`.
+ * @retval None
+ */
+static void Action_GoBack();
+
+/**
+ * @brief Cycles to the next available color theme and applies it.
+ * @details This function increments the theme index, wrapping around if necessary.
+ * It then calls `Ui_ChangeMenuTheme` to apply the new colors to all UI elements
+ * and redraw the screen.
+ * @retval None
+ */
+static void Action_ChangeTheme();
+
+/**
+ * @brief Changes the system brightness to the next level.
+ * @details Cycles through a predefined array of brightness levels
+ * and calls the hardware abstraction layer to apply the new setting.
+ */
+static void Action_ChangeBrightness();
 
 //   ------- Brightness ------
 
@@ -293,7 +344,6 @@ void Ui_FSM_ShortPressActionDetected()
 {
 	Ui_MoveHighlightDown();
 }
-
 
 void Ui_FSM_LongPressActionDetected()
 {
