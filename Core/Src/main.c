@@ -19,12 +19,15 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lcd.h"
+#include "ui.h"
+#include "fsm_button.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,7 +48,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+extern const Page homePage;
+extern const Page settingsPage;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -89,39 +93,36 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_SPI2_Init();
+  MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  HAL_TIM_PWM_Start(&htim10, TIM_CHANNEL_1);
+
   lcdInit();
+  //lcdFillBackground(BLACK);
 
-  for (int y = 0; y < LCD_HEIGHT; y++) {
-    for (int x = 0; x < LCD_WIDTH; x++) {
-      lcdFillPixel(x, y, BLACK);
-    }
-  }
+	for (int y = 0; y < LCD_HEIGHT; y++)
+	{
+	    for (int x = 0; x < LCD_WIDTH; x++)
+	    {
+	      lcdFillPixel(x, y, BLACK);
+	    }
+	}
 
-//  lcdDrawLine(10, 10, 20, 20, YELLOW);
-//  lcdDrawLine(20, 20, 30, 30, BLUE);
-//  lcdDrawLine(30, 30, 40, 40, RED);
-//  lcdDrawRectangle(10, 10, 40, 50, BLUE);
-//  lcdFillRectangle(10, 60, 30, 30, RED);
-
-
-  	lcdFillRoundRectangle(20, 20, 100, 25, 6, BLUE);
-
-  	lcdDrawText(100, 50, "Hellu!", GREEN, BLACK);
-
-  	lcdDrawCircle(20, 50, 2, RED);
-
-  lcdCopy();
+  Ui_SetCurrentPage(&homePage);
 
 
   while (1)
   {
+//	  Ui_MoveHighlightDown();
+//
+//	  HAL_Delay(3000);
 
+	  button_CheckState();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -194,8 +195,7 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
