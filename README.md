@@ -2,7 +2,7 @@
 
 This project is a demonstration of a modular, event-driven UI framework designed for resource-constrained embedded systems. It showcases best practices in software architecture, hardware abstraction, and driver development for the STM32 platform.
 
-![Photo of the project running on a breadboard]
+![IMG_20251012_004627858_HDR](https://github.com/user-attachments/assets/c2793056-eead-446c-a4cd-fc69097d54eb)
 
 ## Key Features & Skills Demonstrated
 
