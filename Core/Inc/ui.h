@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "lcd.h"
+#include "ui_hw.h"
 
 #define BTN_DEFAULT_WIDTH      100
 #define BTN_DEFAULT_HEIGHT     25

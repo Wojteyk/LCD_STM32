@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include "ui.h"
+#include "ui_hw.h"
 
 /** @brief Minimum time (in ms) required for the button signal to stabilize (debounce). */
 #define DEBOUNCE_TIME_MS	50

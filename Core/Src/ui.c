@@ -9,14 +9,25 @@
 static const Page *currentPage = NULL;
 static int currentButtonIndex = 0;
 static int currentThemeIndex = 0;
+static int currentBrightnesIndex = 0;
 
 //   ------- Function declarations ------
 
 static void Action_GoToSettings(Button *self);
-
 static void Action_GoBack(Button *self);
-
 static void Action_ChangeTheme(Button *self);
+static void Action_ChangeBrightness(Button *self);
+
+//   ------- Brightness ------
+
+static const uint8_t brightnessLevels[] = {
+		25,
+		50,
+		75,
+		100
+};
+
+#define Num_Of_Brightness_Levels (sizeof(brightnessLevels) / sizeof(brightnessLevels[0]))
 
 //   ------- Themes ------
 
@@ -117,7 +128,7 @@ static Button settingsButton2={
 	  .text = "Zmiana jasnosci",
 	  .textColor = BLACK,
 	  .bgColor = BLUE,
-	  .onClick = NULL
+	  .onClick = Action_ChangeBrightness
 };
 
 static Button settingsButton3 = {
@@ -148,6 +159,14 @@ const Page settingsPage = {
 };
 
 // ------------------------------------------------------
+
+
+static void Action_ChangeBrightness(Button *self)
+{
+	currentBrightnesIndex = (currentBrightnesIndex + 1) % Num_Of_Brightness_Levels;
+
+		HW_setBacklightBrightness(brightnessLevels[currentBrightnesIndex]);
+}
 
 static void Action_ChangeTheme(Button *self)
 {
