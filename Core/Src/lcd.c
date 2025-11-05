@@ -97,7 +97,7 @@ static const uint16_t initTable[] = {
 		 CMD(0xf0), 0x01,
 		 CMD(0xf6), 0x00,
 		 CMD(ST7735S_COLMOD), 0x05,
-		 CMD(ST7735S_MADCTL), 0xa0,
+		 CMD(ST7735S_MADCTL), 0x60,
 };
 
 static uint16_t frameBuffer[LCD_WIDTH * LCD_HEIGHT];
@@ -343,7 +343,7 @@ static void lcdDrawChar(int x0, int y0, char c, uint16_t color, uint16_t bgColor
 	{
 		uint8_t line = font[c-32][i];
 
-		for(int j = 0; j < FONT_HEIGHT; j++)
+		for(int j = FONT_HEIGHT-1; j >= 0 ; j--)
 		{
 			if((line >> j) & 1)
 			{
