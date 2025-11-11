@@ -100,7 +100,7 @@ static Button returnButton ={
 	.radius = BTN_RETURN_RADIUS,
 	.text = "<",
 	.textColor = BLACK,
-	.bgColor = RED,
+	.bgColor = BLUE,
 	.onClick = Action_GoBack
 };
 
@@ -164,7 +164,7 @@ static Button settingsButton1 ={
 	.width = BTN_DEFAULT_WIDTH,
 	.height = BTN_DEFAULT_HEIGHT,
 	.radius = BTN_DEFAULT_RADIUS,
-	.text = "Zmaiana motywu",
+	.text = "Motyw",
 	.textColor = BLACK,
 	.bgColor = BLUE,
 	.onClick = Action_ChangeTheme
@@ -176,7 +176,7 @@ static Button settingsButton2={
 	  .width = BTN_DEFAULT_WIDTH,
 	  .height = BTN_DEFAULT_HEIGHT,
 	  .radius = BTN_DEFAULT_RADIUS,
-	  .text = "Zmiana jasnosci",
+	  .text = "Jasnosc",
 	  .textColor = BLACK,
 	  .bgColor = BLUE,
 	  .onClick = Action_ChangeBrightness

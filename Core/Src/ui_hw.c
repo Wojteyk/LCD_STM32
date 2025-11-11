@@ -26,3 +26,7 @@ uint8_t HW_isPressedButton()
 {
 	return !HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin);
 }
+
+uint16_t HW_GetEncoderValue(){
+	return __HAL_TIM_GET_COUNTER(&htim8);
+}

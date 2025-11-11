@@ -4,11 +4,15 @@
  *  Created on: Oct 10, 2025
  *      Author: wojte
  */
-#include "fsm_button.h"
+#include "fsm_button.h"	// to do - chanege name please
+
+#define ENCODER_STEP 4
 
 static ButtonState currentState;
 
 static uint32_t pressStartTime;
+
+static int16_t encoderValue;
 
 
 void button_CheckState()
@@ -53,5 +57,24 @@ void button_CheckState()
 		}
 		break;
 	}
+}
+
+void encoder_CheckValue()
+{
+    int16_t currentEncoderValue = (int16_t)__HAL_TIM_GET_COUNTER(&htim8);
+    int16_t diff = currentEncoderValue - encoderValue;
+
+    // overflow correction
+    if (diff > 30000) diff -= 65536;
+    else if (diff < -30000) diff += 65536;
+
+    if (diff >= ENCODER_STEP) {
+        encoderValue = currentEncoderValue;
+        // other way to do
+    }
+    else if (diff <= -ENCODER_STEP) {
+        encoderValue = currentEncoderValue;
+        Ui_FSM_ShortPressActionDetected();
+    }
 }
 

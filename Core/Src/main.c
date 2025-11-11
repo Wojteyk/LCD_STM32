@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
@@ -91,9 +92,11 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_SPI2_Init();
   MX_TIM10_Init();
+  MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -101,6 +104,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   HAL_TIM_PWM_Start(&htim10, TIM_CHANNEL_1);
+  HAL_TIM_Encoder_Start(&htim8, TIM_CHANNEL_ALL);
 
   lcdInit();
   //lcdFillBackground(BLACK);
@@ -118,11 +122,15 @@ int main(void)
 
   while (1)
   {
+
+	  encoder_CheckValue();
 //	  Ui_MoveHighlightDown();
 //
 //	  HAL_Delay(3000);
 
 	  button_CheckState();
+
+	  HAL_Delay(1);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

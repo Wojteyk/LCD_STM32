@@ -12,7 +12,7 @@
 #include "lcd.h"
 #include "ui_hw.h"
 
-#define BTN_DEFAULT_WIDTH      100
+#define BTN_DEFAULT_WIDTH      110
 #define BTN_DEFAULT_HEIGHT     25
 #define BTN_DEFAULT_RADIUS     8
 
