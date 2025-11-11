@@ -337,27 +337,20 @@ void lcdFillRoundRectangle(int x0, int y0, int width, int height, int radius, ui
 
 static void lcdDrawChar(int x0, int y0, char c, uint16_t color, uint16_t bgColor)
 {
-	if(c < 32 || c > 126) return; // check if char is in between 32-126(ASCII)
+    if (c < 32 || c > 126) return;
 
-	for(int i = 0; i < FONT_WIDTH; i++)
-	{
-		uint8_t line = font[c-32][i];
+    for (int row = 0; row < FONT_HEIGHT; row++)
+    {
+        uint8_t bits = font[c - 32][row];
 
-		for(int j = FONT_HEIGHT-1; j >= 0 ; j--)
-		{
-			if((line >> j) & 1)
-			{
-				lcdFillPixel(x0 + i, y0 + j, color);
-			}
-			else
-			{
-				lcdFillPixel(x0 + i, y0 + j, bgColor);
-			}
-		}
-	}
-
-
-
+        for (int col = FONT_WIDTH-1; col >= 0; col--)
+        {
+            if (bits & (1 << col))
+                lcdFillPixel(x0 + col, y0 + row, color);
+            else
+                lcdFillPixel(x0 + col, y0 + row, bgColor);
+        }
+    }
 }
 
 void lcdDrawText(int x0, int y0, const char* str, uint16_t color, uint16_t bgColor)
@@ -387,34 +380,3 @@ void lcdDrawText(int x0, int y0, const char* str, uint16_t color, uint16_t bgCol
 		str++;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

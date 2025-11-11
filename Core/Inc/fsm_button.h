@@ -41,4 +41,5 @@ extern void Ui_FSM_ShortPressActionDetected();
  */
 extern void Ui_FSM_LongPressActionDetected();
 
+void encoder_CheckValue();
 

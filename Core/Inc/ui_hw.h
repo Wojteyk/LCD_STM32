@@ -28,3 +28,5 @@ void HW_setBacklightBrightness(uint8_t percentage);
  * @retval 0 if the button is not pressed.
  */
 uint8_t HW_isPressedButton();
+
+uint16_t HW_GetEncoderValue();
