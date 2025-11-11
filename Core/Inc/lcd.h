@@ -14,6 +14,12 @@
 #include <stdint.h>
 #include <font.h>
 
+/**
+ * @brief Flag indicating whether a DMA transfer is in progress.
+ *        Set to 1 when DMA is active, 0 when finished.
+ */
+static volatile uint8_t lcdSpiBusy = 0;
+
 // Dispaly dimensions
 #define LCD_WIDTH 160
 #define LCD_HEIGHT 128

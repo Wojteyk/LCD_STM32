@@ -101,9 +101,9 @@ void Ui_FSM_ShortPressActionDetected();
  */
 void Ui_FSM_LongPressActionDetected();
 
+/**
+ * @brief Handles detected move actions from encoder.
+ * @param dirDown Direction of movement: non-zero for down/next, zero for up/previous.
+ * @details Usually called by FSM or hardware interrupt when a movement event is detected.
+ */
 void Ui_MoveActionDetected(uint8_t dirDown);
-
-
-
-
-

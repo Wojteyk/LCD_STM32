@@ -17,7 +17,6 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include <fsm_controls.h>
 #include "main.h"
 #include "dma.h"
 #include "spi.h"
@@ -29,6 +28,7 @@
 /* USER CODE BEGIN Includes */
 #include "lcd.h"
 #include "ui.h"
+#include "fsm_controls.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -186,6 +186,13 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+    if (hspi == &hspi2) {
+        HAL_GPIO_WritePin(LCD_CS_GPIO_Port, LCD_CS_Pin, GPIO_PIN_SET);
+        lcdSpiBusy = 0;
+    }
+}
 
 /* USER CODE END 4 */
 

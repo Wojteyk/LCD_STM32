@@ -135,8 +135,13 @@ void lcdCopy()
 	lcdCmd(ST7735S_RAMWR);
 	HAL_GPIO_WritePin(LCD_DC_GPIO_Port, LCD_DC_Pin, GPIO_PIN_SET);
 	HAL_GPIO_WritePin(LCD_CS_GPIO_Port, LCD_CS_Pin, GPIO_PIN_RESET);
-	HAL_SPI_Transmit(&hspi2, (uint8_t*) frameBuffer, sizeof(frameBuffer), HAL_MAX_DELAY);
-	HAL_GPIO_WritePin(LCD_CS_GPIO_Port, LCD_CS_Pin, GPIO_PIN_SET);
+
+	lcdSpiBusy = 1;
+	if (HAL_OK != HAL_SPI_Transmit_DMA(&hspi2, (uint8_t*)frameBuffer, (uint16_t)(LCD_WIDTH * LCD_HEIGHT*2)))
+	{
+		HAL_GPIO_WritePin(LCD_CS_GPIO_Port, LCD_CS_Pin, GPIO_PIN_SET);
+		lcdSpiBusy = 0;
+	}
 
 }
 
