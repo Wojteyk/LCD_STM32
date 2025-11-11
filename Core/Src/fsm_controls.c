@@ -8,55 +8,25 @@
 
 #define ENCODER_STEP 4
 
-static ButtonState currentState;
-
-static uint32_t fsm_pressStartTime, encoder_pressStartTime;
+static uint32_t encoder_pressStartTime;
 
 static int16_t encoderValue;
 
+volatile uint8_t firstDebounce = 1;
 
 void button_CheckState()
 {
-	uint32_t currentTime = HAL_GetTick();
-	uint8_t isCurrentlyPressed = HW_isPressedButton();
-
-	switch(currentState)
+	if(HW_isPressedButton())
 	{
-	case IDLE:
-		if(isCurrentlyPressed){
-			currentState = DEBOUNCING;
-			fsm_pressStartTime = HAL_GetTick();
-		}
-		break;
-
-	case DEBOUNCING:
-		if(!isCurrentlyPressed)
-		{
-			currentState = IDLE;
-		}
-		else if((currentTime - fsm_pressStartTime) > DEBOUNCE_FSM_TIME_MS)
-		{
-			currentState = PRESSED;
-		}
-		break;
-
-	case PRESSED:
-		if(!isCurrentlyPressed){
-			Ui_FSM_ShortPressActionDetected();
-			currentState = IDLE;
-		}
-		else if ((currentTime - fsm_pressStartTime) > LONG_PRESS_TIME_MS){
-			Ui_FSM_LongPressActionDetected();
-			currentState = LONG_PRESS_WAIT;
-		}
-		break;
-
-	case LONG_PRESS_WAIT:
-		if(!isCurrentlyPressed){
-			currentState = IDLE;
-		}
-		break;
+		__HAL_TIM_SET_COUNTER(&htim14, 0);
+		HAL_TIM_Base_Start_IT(&htim14);
+		firstDebounce = 0;
+	}else if (!firstDebounce)
+	{
+		Ui_FSM_ShortPressActionDetected();
+		firstDebounce = 1;
 	}
+
 }
 
 void encoder_CheckValue()

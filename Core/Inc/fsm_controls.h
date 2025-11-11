@@ -12,6 +12,8 @@
 /** @brief Time (in ms) after which a press is classified as a long press. */
 #define LONG_PRESS_TIME_MS	600
 
+extern volatile uint8_t buttonPressedFlag;
+
 /**
  * @brief Defines the states of the button Finite State Machine (FSM).
  */
@@ -23,10 +25,11 @@ typedef enum {
 } ButtonState;
 
 /**
- * @brief The main execution function for the button FSM.
- * * This function must be called periodically in the main loop (polling)
- * or within a regular timer interrupt to continuously analyze the button's
- * pin state and press duration.
+ * @brief Handles the button state change, triggered by an EXTI interrupt.
+ * * This function initiates the debounce timer (TIM14) upon button press and
+ * detects a short release if confirmed press monitoring is active.
+ * * NOTE: For this interrupt-driven model, this function should be called
+ * from the HAL_GPIO_EXTI_Callback() or a task/queue handler.
  */
 void button_CheckState();
 
@@ -46,4 +49,5 @@ extern void Ui_FSM_LongPressActionDetected();
 extern void Ui_MoveActionDetected(uint8_t dirDown);
 
 void encoder_CheckValue();
+
 
