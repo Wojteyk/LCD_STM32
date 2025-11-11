@@ -97,6 +97,7 @@ int main(void)
   MX_SPI2_Init();
   MX_TIM10_Init();
   MX_TIM8_Init();
+  MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -128,7 +129,7 @@ int main(void)
 //
 //	  HAL_Delay(3000);
 
-	  button_CheckState();
+	  //button_CheckState();
 
 	  HAL_Delay(1);
     /* USER CODE END WHILE */
@@ -192,6 +193,20 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
         HAL_GPIO_WritePin(LCD_CS_GPIO_Port, LCD_CS_Pin, GPIO_PIN_SET);
         lcdSpiBusy = 0;
     }
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    if(GPIO_Pin == B1_Pin){
+        __HAL_TIM_SET_COUNTER(&htim14, 0);
+        HAL_TIM_Base_Start_IT(&htim14);
+    }
+}
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if(htim == &htim14){
+		button_CheckState();
+	}
 }
 
 /* USER CODE END 4 */
