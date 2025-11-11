@@ -108,28 +108,12 @@ int main(void)
   HAL_TIM_Encoder_Start(&htim8, TIM_CHANNEL_ALL);
 
   lcdInit();
-  //lcdFillBackground(BLACK);
-
-	for (int y = 0; y < LCD_HEIGHT; y++)
-	{
-	    for (int x = 0; x < LCD_WIDTH; x++)
-	    {
-	      lcdFillPixel(x, y, BLACK);
-	    }
-	}
+  lcdFillBackground(BLACK);
 
   Ui_SetCurrentPage(&homePage);
 
-
   while (1)
   {
-
-	  encoder_CheckValue();
-//	  Ui_MoveHighlightDown();
-//
-//	  HAL_Delay(3000);
-
-	  //button_CheckState();
 
 	  HAL_Delay(1);
     /* USER CODE END WHILE */
