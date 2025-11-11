@@ -4,8 +4,10 @@
 #include "ui.h"
 #include "ui_hw.h"
 
+#define DEBOUNCE_ENCODER_TIME_MS 100
+
 /** @brief Minimum time (in ms) required for the button signal to stabilize (debounce). */
-#define DEBOUNCE_TIME_MS	50
+#define DEBOUNCE_FSM_TIME_MS	50
 
 /** @brief Time (in ms) after which a press is classified as a long press. */
 #define LONG_PRESS_TIME_MS	600
@@ -40,6 +42,8 @@ extern void Ui_FSM_ShortPressActionDetected();
  * * This function is defined in the UI core module (ui.c) to handle the resulting action.
  */
 extern void Ui_FSM_LongPressActionDetected();
+
+extern void Ui_MoveActionDetected(uint8_t dirDown);
 
 void encoder_CheckValue();
 

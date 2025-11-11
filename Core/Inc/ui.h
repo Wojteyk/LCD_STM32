@@ -86,7 +86,7 @@ void Ui_ChangeMenuTheme( uint16_t btnTextColor, uint16_t btnBgColor);
  * @brief Moves the highlight (cursor) to the next button in the list.
  * * If the highlight reaches the end of the list, it wraps back to the first element.
  */
-void Ui_MoveHighlightDown();
+void Ui_MoveHighlight(uint8_t dirDown);
 
 /**
  * @brief Callback invoked by the button Finite State Machine (FSM) upon detecting a stable short press.
@@ -100,6 +100,8 @@ void Ui_FSM_ShortPressActionDetected();
  * which often triggers continuous actions or a different page flow.
  */
 void Ui_FSM_LongPressActionDetected();
+
+void Ui_MoveActionDetected(uint8_t dirDown);
 
 
 
