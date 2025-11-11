@@ -17,6 +17,7 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include <fsm_controls.h>
 #include "main.h"
 #include "dma.h"
 #include "spi.h"
@@ -28,7 +29,6 @@
 /* USER CODE BEGIN Includes */
 #include "lcd.h"
 #include "ui.h"
-#include "fsm_button.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

@@ -107,7 +107,7 @@ static Button returnButton ={
 //   ------- HOME PAGE ------
 
 static Button homeButton1 ={
-	.x = 30,
+	.x = 25,
 	.y = 15,
 	.width = BTN_DEFAULT_WIDTH,
 	.height = BTN_DEFAULT_HEIGHT,
@@ -119,24 +119,24 @@ static Button homeButton1 ={
 };
 
 static Button homeButton2={
-	  .x = 30,
+	  .x = 25,
 	  .y = 50,
 	  .width = BTN_DEFAULT_WIDTH,
 	  .height = BTN_DEFAULT_HEIGHT,
 	  .radius = BTN_DEFAULT_RADIUS,
-	  .text = "Telefon",
+	  .text = "Temperatura",
 	  .textColor = BLACK,
 	  .bgColor = BLUE,
 	  .onClick = NULL
 };
 
 static Button homeButton3 = {
-	  .x = 30,
+	  .x = 25,
 	  .y = 85,
 	  .width = BTN_DEFAULT_WIDTH,
 	  .height = BTN_DEFAULT_HEIGHT,
 	  .radius = BTN_DEFAULT_RADIUS,
-	  .text = "Temperatura",
+	  .text = "Place holder",
 	  .textColor = BLACK,
 	  .bgColor = BLUE,
 	  .onClick = NULL,
@@ -159,7 +159,7 @@ const Page homePage = {
 //   ------- SETTINGS PAGE ------
 
 static Button settingsButton1 ={
-	.x = 30,
+	.x = 25,
 	.y = 15,
 	.width = BTN_DEFAULT_WIDTH,
 	.height = BTN_DEFAULT_HEIGHT,
@@ -171,7 +171,7 @@ static Button settingsButton1 ={
 };
 
 static Button settingsButton2={
-	  .x = 30,
+	  .x = 25,
 	  .y = 50,
 	  .width = BTN_DEFAULT_WIDTH,
 	  .height = BTN_DEFAULT_HEIGHT,
@@ -183,7 +183,7 @@ static Button settingsButton2={
 };
 
 static Button settingsButton3 = {
-	  .x = 30,
+	  .x = 25,
 	  .y = 85,
 	  .width = BTN_DEFAULT_WIDTH,
 	  .height = BTN_DEFAULT_HEIGHT,
@@ -329,25 +329,41 @@ void Ui_ChangeMenuTheme( uint16_t changedTextColor, uint16_t changedBgColor)
 	Ui_DrawPage();
 }
 
-void Ui_MoveHighlightDown()
+void Ui_MoveHighlight(uint8_t dirDown)
 {
-	if(currentPage == NULL || currentPage->buttonCount == 0) return;
+    if (currentPage == NULL || currentPage->buttonCount == 0) return;
 
-	currentButtonIndex++;
+    if (dirDown)
+    {
+        currentButtonIndex++;
+        if (currentButtonIndex >= currentPage->buttonCount)
+            currentButtonIndex = 0;
+    }
+    else
+    {
+        if (currentButtonIndex == 0)
+            currentButtonIndex = currentPage->buttonCount - 1;
+        else
+            currentButtonIndex--;
+    }
 
-	if(currentButtonIndex == currentPage->buttonCount) currentButtonIndex = 0;
-
-	Ui_DrawPage();
+    Ui_DrawPage();
 }
+
 
 void Ui_FSM_ShortPressActionDetected()
 {
-	Ui_MoveHighlightDown();
+	Ui_ExecuteAction();
 }
 
 void Ui_FSM_LongPressActionDetected()
 {
 	Ui_ExecuteAction();
+}
+
+void Ui_MoveActionDetected(uint8_t dirDown)
+{
+	Ui_MoveHighlight(dirDown);
 }
 
 
