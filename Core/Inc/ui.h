@@ -23,6 +23,14 @@
 #define HIGHLIGHT_COLOR 	  WHITE
 #define BACKGROUND_COLOR   	  BLACK
 
+typedef struct{
+	uint8_t x;              ///< X position (top-left corner).
+	uint8_t y;              ///< Y position (top-left corner).
+	const char *text;      	///< The text displayed on the button.
+	uint16_t textColor;    	///< 16-bit text color (RGB565).
+	uint16_t bgColor;      	///< 16-bit background color (RGB565).
+}Label;
+
 /**
  * @brief Structure representing an interactive menu button.
  *
@@ -49,6 +57,9 @@ typedef struct Button {
 typedef struct {
 	Button* const *buttons; ///< A constant array of pointers to the Button structures on this page.
 	size_t buttonCount;     ///< The total number of buttons in the 'buttons' array.
+
+	Label* const *labels;
+	size_t labelCount;
 } Page;
 
 /**

@@ -29,6 +29,15 @@ static int currentBrightnesIndex = 0;
 static void Ui_DrawButton(const Button *btn, uint8_t isHighlited);
 
 /**
+ * @brief Draws a text label on the screen.
+ * @details Displays static text at a fixed position with specified text and background colors.
+ * This function is used for informational text elements that do not respond to user input.
+ * @param label Pointer to a constant Label object containing position, text, and color data.
+ * @retval None
+ */
+static void Ui_DrawLabel(const Label *label);
+
+/**
  * @brief Executes the action associated with the currently highlighted button.
  * @details This function is typically called in response to a long press event.
  * It retrieves the highlighted button from the current page and, if an
@@ -36,6 +45,14 @@ static void Ui_DrawButton(const Button *btn, uint8_t isHighlited);
  * @retval None
  */
 static void Ui_ExecuteAction();
+
+/**
+ * @brief Navigates the user interface to the sensors page.
+ * @details This is a callback function assigned to a button's `onClick` handler.
+ * It calls `Ui_SetCurrentPage` to display the `sensorsPage`.
+ * @retval None
+ */
+static void Action_GoToSensors(Button *self);
 
 /**
  * @brief Navigates the user interface to the settings page.
@@ -104,6 +121,45 @@ static Button returnButton ={
 	.onClick = Action_GoBack
 };
 
+//   ------- Sensors PAGE ------
+
+static Label sensorsLabel1 ={
+		.x = 7,
+		.y = 15,
+		.text = "Temperatura",
+		.textColor = WHITE,
+		.bgColor = BLACK,
+};
+
+static Label sensorsLabel2 ={
+		.x = 7,
+		.y = 40,
+		.text = "Wilgotnosc",
+		.textColor = WHITE,
+		.bgColor = BLACK,
+};
+
+static Label* const sensorsLabels[] = {
+	  &sensorsLabel1,
+	  &sensorsLabel2,
+};
+
+static Button* const sensorsButtons[] = {
+	  &returnButton,
+};
+
+#define Num_Of_Sensors_Labels (sizeof(sensorsLabels) / sizeof(sensorsLabels[0]))
+#define Num_Of_Sensors_Buttons (sizeof(sensorsButtons) / sizeof(sensorsButtons[0]))
+
+const Page sensorsPage = {
+		.buttons = sensorsButtons,
+		.buttonCount = Num_Of_Sensors_Buttons,
+
+		.labels = sensorsLabels,
+		.labelCount =Num_Of_Sensors_Labels,
+};
+
+
 //   ------- HOME PAGE ------
 
 static Button homeButton1 ={
@@ -127,7 +183,7 @@ static Button homeButton2={
 	  .text = "Temperatura",
 	  .textColor = BLACK,
 	  .bgColor = BLUE,
-	  .onClick = NULL
+	  .onClick = Action_GoToSensors
 };
 
 static Button homeButton3 = {
@@ -211,7 +267,6 @@ const Page settingsPage = {
 
 // ------------------------------------------------------
 
-
 static void Action_ChangeBrightness(Button *self)
 {
 	currentBrightnesIndex = (currentBrightnesIndex + 1) % Num_Of_Brightness_Levels;
@@ -224,6 +279,10 @@ static void Action_ChangeTheme(Button *self)
 	currentThemeIndex = (currentThemeIndex + 1) % Num_Of_Themes;
 
 	Ui_ChangeMenuTheme(themes[currentThemeIndex].textColor, themes[currentThemeIndex].bgColor);
+}
+
+static void Action_GoToSensors(Button *self){
+	Ui_SetCurrentPage(&sensorsPage);
 }
 
 static void Action_GoToSettings(Button *self)
@@ -287,13 +346,25 @@ static void Ui_DrawButton(const Button *btn, uint8_t isHighlited)
 	}
 }
 
+static void Ui_DrawLabel(const Label *label){
+	lcdDrawText(label->x,
+				label->y,
+				label->text,
+				label->textColor,
+				label->bgColor);
+}
+
 void Ui_DrawPage(){
 
 	if(currentPage == NULL) return;
 
 	lcdFillBackground(BACKGROUND_COLOR);
 
-	for(size_t i =0; i < currentPage->buttonCount; i++)
+	for(size_t i = 0; i < currentPage->labelCount; i++){
+		Ui_DrawLabel(currentPage->labels[i]);
+	}
+
+	for(size_t i = 0; i < currentPage->buttonCount; i++)
 	{
 		uint8_t isHihglithed  = (i == currentButtonIndex);
 		Ui_DrawButton(currentPage->buttons[i], isHihglithed);
