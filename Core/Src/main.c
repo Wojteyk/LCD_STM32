@@ -208,7 +208,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         if(rxData == '\n' || uartIndex >= RX_BUFFER_SIZE-1)
         {
             uartLine[uartIndex] = '\0';
-            parseDHTData(uartLine);
+            Uart_parseDHTData(uartLine);
             uartIndex = 0;
         }
         else
@@ -221,6 +221,13 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     }
 }
 
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if(huart->Instance == USART3)
+    {
+        transmit_it_flag = 0;
+    }
+}
 /* USER CODE END 4 */
 
 /**

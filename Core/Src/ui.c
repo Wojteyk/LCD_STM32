@@ -5,6 +5,7 @@
  *      Author: wojte
  */
 #include "ui.h"
+#include "uart_connection.h"
 
 // --- Static Global Variables ---
 
@@ -19,9 +20,22 @@ static int currentBrightnesIndex = 0;
 
 static char bufTemperature[8] = "25.4";
 static char bufHumidity[8] = "30";
-static char bufPc[8] = "On";
+static char bufPc[8] = "Off";
+
+static uint8_t pcState = 0;
 
 //   ------- Function declarations ------
+
+/**
+ * @brief Toggles the PC state between ON and OFF.
+ *
+ * This function is intended to be used as a callback for a button press.
+ * When executed, it switches the PC state, updates the corresponding dynamic
+ * label on the UI, and sends the new state over UART.
+ *
+ * @param self Pointer to the Button structure that triggered this action.
+ */
+static void Action_TogglePc(Button *self);
 
 /**
  * @brief Draws a single button on the screen.
@@ -169,7 +183,7 @@ static Button controlsButton1 ={
 	.text = "Przelacz",
 	.textColor = BLACK,
 	.bgColor = BLUE,
-	.onClick = NULL//Action_TogglePC
+	.onClick = Action_TogglePc
 };
 
 static const Label_Const* const controlsLabelsConst[] = {
@@ -391,6 +405,15 @@ static void Action_ChangeBrightness(Button *self)
 		HW_setBacklightBrightness(brightnessLevels[currentBrightnesIndex]);
 }
 
+static void Action_TogglePc(Button *self)
+{
+	pcState = ! pcState;
+	snprintf(bufPc, sizeof(bufPc), "%s", pcState ? "On " : "Off");
+	Uart_sendPcState(pcState);
+	Ui_DrawLabel_Dynamic(&controlsLabelDynamic1);
+	lcdCopy();
+}
+
 static void Action_ChangeTheme(Button *self)
 {
 	currentThemeIndex = (currentThemeIndex + 1) % Num_Of_Themes;
@@ -476,6 +499,7 @@ static void Ui_DrawLabel_Const(const Label_Const *label){
 }
 
 static void Ui_DrawLabel_Dynamic(Label_Dynamic *label){
+
     const char *textToDraw = label->dataPtr ? label->dataPtr : label->text;
     lcdDrawText(label->x, label->y, textToDraw, label->textColor, label->bgColor);
 }
