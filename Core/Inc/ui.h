@@ -23,22 +23,33 @@
 #define HIGHLIGHT_COLOR 	  WHITE
 #define BACKGROUND_COLOR   	  BLACK
 
+/**
+ * @brief Structure representing a static label on the UI.
+ *
+ * This label displays fixed text that does not change at runtime.
+ */
 typedef struct{
-	uint8_t x;              ///< X position (top-left corner).
-	uint8_t y;              ///< Y position (top-left corner).
-	const char *text;      	///< The text displayed on the button.
-	uint16_t textColor;    	///< 16-bit text color (RGB565).
-	uint16_t bgColor;      	///< 16-bit background color (RGB565).
-}Label_Const;
+    uint8_t x;          ///< X position of the top-left corner of the label.
+    uint8_t y;          ///< Y position of the top-left corner of the label.
+    const char *text;   ///< Pointer to the text string displayed on the label.
+    uint16_t textColor; ///< 16-bit text color in RGB565 format.
+    uint16_t bgColor;   ///< 16-bit background color in RGB565 format.
+} Label_Const;
 
+/**
+ * @brief Structure representing a dynamic label on the UI.
+ *
+ * This label can display text that may change at runtime. The text
+ * can be modified via the `dataPtr` pointer.
+ */
 typedef struct{
-	uint8_t x;              ///< X position (top-left corner).
-	uint8_t y;              ///< Y position (top-left corner).
-	char *text;      	///< The text displayed on the button.
-	uint16_t textColor;    	///< 16-bit text color (RGB565).
-	uint16_t bgColor;      	///< 16-bit background color (RGB565).
-	char *dataPtr;
-}Label_Dynamic;
+    uint8_t x;          ///< X position of the top-left corner of the label.
+    uint8_t y;          ///< Y position of the top-left corner of the label.
+    char *text;         ///< Pointer to the text string displayed on the label.
+    uint16_t textColor; ///< 16-bit text color in RGB565 format.
+    uint16_t bgColor;   ///< 16-bit background color in RGB565 format.
+    char *dataPtr;      ///< Pointer to the dynamic data string used to update the label.
+} Label_Dynamic;
 
 /**
  * @brief Structure representing an interactive menu button.
@@ -61,17 +72,20 @@ typedef struct Button {
 
 /**
  * @brief Represents a single screen or view in the UI.
- * @details Contains a collection of buttons that are displayed together on the screen.
+ *
+ * A Page groups together all UI elements that are displayed
+ * on a particular screen, including buttons and labels.
+ * This allows the UI to manage and render multiple pages independently.
  */
 typedef struct {
-	Button* const *buttons; ///< A constant array of pointers to the Button structures on this page.
-	size_t buttonCount;     ///< The total number of buttons in the 'buttons' array.
+    Button* const *buttons;        ///< Pointer to a constant array of pointers to Button structures on this page.
+    size_t buttonCount;             ///< The total number of buttons in the 'buttons' array.
 
-	const Label_Const* const *labels_Const;
-	size_t label_Const_Count;
+    const Label_Const* const *labels_Const; ///< Pointer to a constant array of pointers to static labels.
+    size_t label_Const_Count;                ///< The number of static labels on this page.
 
-	Label_Dynamic* const *labels_Dynamic;
-	size_t label_Dynamic_Count;
+    Label_Dynamic* const *labels_Dynamic;   ///< Pointer to a constant array of pointers to dynamic labels.
+    size_t label_Dynamic_Count;             ///< The number of dynamic labels on this page.
 } Page;
 
 /**
@@ -131,4 +145,16 @@ void Ui_FSM_LongPressActionDetected();
  */
 void Ui_MoveActionDetected(uint8_t dirDown);
 
+/**
+ * @brief Update the UI with the latest DHT11 sensor readings.
+ *
+ * This function formats the temperature and humidity values into strings
+ * and updates the corresponding dynamic labels on the sensors page.
+ * If the currently displayed page is the sensors page, the labels
+ * are redrawn and the LCD buffer is copied to the screen.
+ *
+ * @param temperature The current temperature in Celsius.
+ * @param humidity The current relative humidity in percent.
+ */
 void Ui_UpdateDHTData(float temperature, float humidity);
+

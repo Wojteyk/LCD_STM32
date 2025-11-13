@@ -19,6 +19,7 @@ static int currentBrightnesIndex = 0;
 
 static char bufTemperature[8] = "25.4";
 static char bufHumidity[8] = "30";
+static char bufPc[8] = "On";
 
 //   ------- Function declarations ------
 
@@ -40,6 +41,13 @@ static void Ui_DrawButton(const Button *btn, uint8_t isHighlited);
  */
 static void Ui_DrawLabel_Const(const Label_Const *label);
 
+/**
+ * @brief Draws a text label on the screen.
+ * @details Displays static text at a fixed position with dynamic text and background colors.
+ * This function is used for dynamic text elements.
+ * @param label Pointer to a constant Label object containing position, text, and color data.
+ * @retval None
+ */
 static void Ui_DrawLabel_Dynamic(Label_Dynamic *label);
 
 /**
@@ -50,6 +58,14 @@ static void Ui_DrawLabel_Dynamic(Label_Dynamic *label);
  * @retval None
  */
 static void Ui_ExecuteAction();
+
+/**
+ * @brief Navigates the user interface to the controls page.
+ * @details This is a callback function assigned to a button's `onClick` handler.
+ * It calls `Ui_SetCurrentPage` to display the `sensorsPage`.
+ * @retval None
+ */
+static void Action_GoToControls(Button *self);
 
 /**
  * @brief Navigates the user interface to the sensors page.
@@ -126,6 +142,64 @@ static Button returnButton ={
 	.onClick = Action_GoBack
 };
 
+//   ------- Controls PAGE ------
+static const Label_Const controlsLabelConst1 ={
+		.x = 5,
+		.y = 15,
+		.text = "Komputer",
+		.textColor = WHITE,
+		.bgColor = BLACK,
+};
+
+static Label_Dynamic controlsLabelDynamic1 ={
+		.x = 108,
+		.y = 15,
+		.text = "1",
+		.textColor = WHITE,
+		.bgColor = BLACK,
+		.dataPtr = bufPc,
+};
+
+static Button controlsButton1 ={
+	.x = 25,
+	.y = 35,
+	.width = BTN_DEFAULT_WIDTH,
+	.height = BTN_DEFAULT_HEIGHT,
+	.radius = BTN_DEFAULT_RADIUS,
+	.text = "Przelacz",
+	.textColor = BLACK,
+	.bgColor = BLUE,
+	.onClick = NULL//Action_TogglePC
+};
+
+static const Label_Const* const controlsLabelsConst[] = {
+	  &controlsLabelConst1,
+};
+
+static Label_Dynamic* const controlsLabelsDynamic[] = {
+	  &controlsLabelDynamic1,
+};
+
+static Button* const controlsButtons[] = {
+		&controlsButton1,
+		&returnButton,
+};
+
+#define Num_Of_Controls_Const_Labels (sizeof(controlsLabelsConst) / sizeof(controlsLabelsConst[0]))
+#define Num_Of_Controls_Dynamic_Labels (sizeof(controlsLabelsDynamic) / sizeof(controlsLabelsDynamic[0]))
+#define Num_Of_Controls_Buttons (sizeof(controlsButtons) / sizeof(controlsButtons[0]))
+
+const Page controlsPage = {
+		.buttons = controlsButtons,
+		.buttonCount = Num_Of_Controls_Buttons,
+
+		.labels_Const = controlsLabelsConst,
+		.label_Const_Count =Num_Of_Controls_Const_Labels,
+
+		.labels_Dynamic = controlsLabelsDynamic,
+		.label_Dynamic_Count =Num_Of_Controls_Dynamic_Labels,
+};
+
 //   ------- Sensors PAGE ------
 
 static const Label_Const sensorsLabelConst1 ={
@@ -177,7 +251,7 @@ static Button* const sensorsButtons[] = {
 };
 
 #define Num_Of_Sensors_Const_Labels (sizeof(sensorsLabelsConst) / sizeof(sensorsLabelsConst[0]))
-#define Num_Of_Sensors_Dynamic_Labels (sizeof(sensorsLabelsConst) / sizeof(sensorsLabelsConst[0]))
+#define Num_Of_Sensors_Dynamic_Labels (sizeof(sensorsLabelsDynamic) / sizeof(sensorsLabelsDynamic[0]))
 #define Num_Of_Sensors_Buttons (sizeof(sensorsButtons) / sizeof(sensorsButtons[0]))
 
 const Page sensorsPage = {
@@ -224,10 +298,10 @@ static Button homeButton3 = {
 	  .width = BTN_DEFAULT_WIDTH,
 	  .height = BTN_DEFAULT_HEIGHT,
 	  .radius = BTN_DEFAULT_RADIUS,
-	  .text = "Place holder",
+	  .text = "Sterowanie",
 	  .textColor = BLACK,
 	  .bgColor = BLUE,
-	  .onClick = NULL,
+	  .onClick = Action_GoToControls
 };
 
 
@@ -297,6 +371,17 @@ const Page settingsPage = {
 		  .buttonCount = Num_Of_Settings_Buttons
 };
 
+//   ------- PAGES ------
+
+const Page* const pages[] = {
+		&settingsPage,
+		&controlsPage,
+		&homePage,
+		&sensorsPage,
+};
+
+#define Num_Of_Pages (sizeof(pages) / sizeof(pages[0]))
+
 // ------------------------------------------------------
 
 static void Action_ChangeBrightness(Button *self)
@@ -315,6 +400,10 @@ static void Action_ChangeTheme(Button *self)
 
 static void Action_GoToSensors(Button *self){
 	Ui_SetCurrentPage(&sensorsPage);
+}
+
+static void Action_GoToControls(Button *self){
+	Ui_SetCurrentPage(&controlsPage);
 }
 
 static void Action_GoToSettings(Button *self)
@@ -426,17 +515,13 @@ void Ui_SetCurrentPage(const Page *newPage)
 void Ui_ChangeMenuTheme( uint16_t changedTextColor, uint16_t changedBgColor)
 {
 
-	for(int i = 0; i < Num_Of_Menu_Buttons; i++ )
-	{
-		menuButtons[i]->textColor = changedTextColor;
-		menuButtons[i]->bgColor = changedBgColor;
-	}
-
-	for(int i = 0; i < Num_Of_Settings_Buttons; i++ )
+	for(int page = 0; page < Num_Of_Pages; page++){
+		for(int btn = 0; btn < Num_Of_Menu_Buttons; btn++ )
 		{
-			settingsButtons[i]->textColor = changedTextColor;
-			settingsButtons[i]->bgColor = changedBgColor;
+			pages[page]->buttons[btn]->textColor = changedTextColor;
+			pages[page]->buttons[btn]->bgColor = changedBgColor;
 		}
+	}
 
 	Ui_DrawPage();
 }
@@ -473,7 +558,6 @@ void Ui_UpdateDHTData(float temperature, float humidity)
         lcdCopy();
     }
 }
-
 
 void Ui_FSM_ShortPressActionDetected()
 {
