@@ -29,7 +29,16 @@ typedef struct{
 	const char *text;      	///< The text displayed on the button.
 	uint16_t textColor;    	///< 16-bit text color (RGB565).
 	uint16_t bgColor;      	///< 16-bit background color (RGB565).
-}Label;
+}Label_Const;
+
+typedef struct{
+	uint8_t x;              ///< X position (top-left corner).
+	uint8_t y;              ///< Y position (top-left corner).
+	char *text;      	///< The text displayed on the button.
+	uint16_t textColor;    	///< 16-bit text color (RGB565).
+	uint16_t bgColor;      	///< 16-bit background color (RGB565).
+	char *dataPtr;
+}Label_Dynamic;
 
 /**
  * @brief Structure representing an interactive menu button.
@@ -58,8 +67,11 @@ typedef struct {
 	Button* const *buttons; ///< A constant array of pointers to the Button structures on this page.
 	size_t buttonCount;     ///< The total number of buttons in the 'buttons' array.
 
-	Label* const *labels;
-	size_t labelCount;
+	const Label_Const* const *labels_Const;
+	size_t label_Const_Count;
+
+	Label_Dynamic* const *labels_Dynamic;
+	size_t label_Dynamic_Count;
 } Page;
 
 /**
@@ -118,3 +130,5 @@ void Ui_FSM_LongPressActionDetected();
  * @details Usually called by FSM or hardware interrupt when a movement event is detected.
  */
 void Ui_MoveActionDetected(uint8_t dirDown);
+
+void Ui_UpdateDHTData(float temperature, float humidity);

@@ -17,6 +17,9 @@ static int currentThemeIndex = 0;
 /// @brief Index of the currently selected brightness level.
 static int currentBrightnesIndex = 0;
 
+static char bufTemperature[8] = "25.4";
+static char bufHumidity[8] = "30";
+
 //   ------- Function declarations ------
 
 /**
@@ -35,7 +38,9 @@ static void Ui_DrawButton(const Button *btn, uint8_t isHighlited);
  * @param label Pointer to a constant Label object containing position, text, and color data.
  * @retval None
  */
-static void Ui_DrawLabel(const Label *label);
+static void Ui_DrawLabel_Const(const Label_Const *label);
+
+static void Ui_DrawLabel_Dynamic(Label_Dynamic *label);
 
 /**
  * @brief Executes the action associated with the currently highlighted button.
@@ -123,40 +128,67 @@ static Button returnButton ={
 
 //   ------- Sensors PAGE ------
 
-static Label sensorsLabel1 ={
-		.x = 7,
+static const Label_Const sensorsLabelConst1 ={
+		.x = 5,
 		.y = 15,
 		.text = "Temperatura",
 		.textColor = WHITE,
 		.bgColor = BLACK,
 };
 
-static Label sensorsLabel2 ={
-		.x = 7,
+static const Label_Const sensorsLabelConst2 ={
+		.x = 5,
 		.y = 40,
 		.text = "Wilgotnosc",
 		.textColor = WHITE,
 		.bgColor = BLACK,
 };
 
-static Label* const sensorsLabels[] = {
-	  &sensorsLabel1,
-	  &sensorsLabel2,
+static Label_Dynamic sensorsLabelDynamic1 ={
+		.x = 108,
+		.y = 15,
+		.text = "1",
+		.textColor = WHITE,
+		.bgColor = BLACK,
+		.dataPtr = bufTemperature,
+};
+
+static  Label_Dynamic sensorsLabelDynamic2 ={
+		.x = 105,
+		.y = 40,
+		.text = "2",
+		.textColor = WHITE,
+		.bgColor = BLACK,
+		.dataPtr = bufHumidity,
+};
+
+static const Label_Const* const sensorsLabelsConst[] = {
+	  &sensorsLabelConst1,
+	  &sensorsLabelConst2,
+};
+
+static Label_Dynamic* const sensorsLabelsDynamic[] = {
+	  &sensorsLabelDynamic1,
+	  &sensorsLabelDynamic2,
 };
 
 static Button* const sensorsButtons[] = {
 	  &returnButton,
 };
 
-#define Num_Of_Sensors_Labels (sizeof(sensorsLabels) / sizeof(sensorsLabels[0]))
+#define Num_Of_Sensors_Const_Labels (sizeof(sensorsLabelsConst) / sizeof(sensorsLabelsConst[0]))
+#define Num_Of_Sensors_Dynamic_Labels (sizeof(sensorsLabelsConst) / sizeof(sensorsLabelsConst[0]))
 #define Num_Of_Sensors_Buttons (sizeof(sensorsButtons) / sizeof(sensorsButtons[0]))
 
 const Page sensorsPage = {
 		.buttons = sensorsButtons,
 		.buttonCount = Num_Of_Sensors_Buttons,
 
-		.labels = sensorsLabels,
-		.labelCount =Num_Of_Sensors_Labels,
+		.labels_Const = sensorsLabelsConst,
+		.label_Const_Count =Num_Of_Sensors_Const_Labels,
+
+		.labels_Dynamic = sensorsLabelsDynamic,
+		.label_Dynamic_Count =Num_Of_Sensors_Dynamic_Labels,
 };
 
 
@@ -346,12 +378,17 @@ static void Ui_DrawButton(const Button *btn, uint8_t isHighlited)
 	}
 }
 
-static void Ui_DrawLabel(const Label *label){
+static void Ui_DrawLabel_Const(const Label_Const *label){
 	lcdDrawText(label->x,
 				label->y,
 				label->text,
 				label->textColor,
 				label->bgColor);
+}
+
+static void Ui_DrawLabel_Dynamic(Label_Dynamic *label){
+    const char *textToDraw = label->dataPtr ? label->dataPtr : label->text;
+    lcdDrawText(label->x, label->y, textToDraw, label->textColor, label->bgColor);
 }
 
 void Ui_DrawPage(){
@@ -360,8 +397,12 @@ void Ui_DrawPage(){
 
 	lcdFillBackground(BACKGROUND_COLOR);
 
-	for(size_t i = 0; i < currentPage->labelCount; i++){
-		Ui_DrawLabel(currentPage->labels[i]);
+	for(size_t i = 0; i < currentPage->label_Const_Count; i++){
+		Ui_DrawLabel_Const(currentPage->labels_Const[i]);
+	}
+
+	for(size_t i = 0; i < currentPage->label_Dynamic_Count; i++){
+		Ui_DrawLabel_Dynamic(currentPage->labels_Dynamic[i]);
 	}
 
 	for(size_t i = 0; i < currentPage->buttonCount; i++)
@@ -419,6 +460,18 @@ void Ui_MoveHighlight(uint8_t dirDown)
     }
 
     Ui_DrawPage();
+}
+
+void Ui_UpdateDHTData(float temperature, float humidity)
+{
+    snprintf(bufTemperature, sizeof(bufTemperature), "%.1fC", temperature);
+    snprintf(bufHumidity, sizeof(bufHumidity), "%.1f%%", humidity);
+
+    if(currentPage == &sensorsPage){
+        Ui_DrawLabel_Dynamic(&sensorsLabelDynamic1);
+        Ui_DrawLabel_Dynamic(&sensorsLabelDynamic2);
+        lcdCopy();
+    }
 }
 
 
