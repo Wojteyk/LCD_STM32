@@ -29,6 +29,7 @@
 #include "lcd.h"
 #include "ui.h"
 #include "fsm_controls.h"
+#include "uart_connection.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,6 +52,10 @@
 /* USER CODE BEGIN PV */
 extern const Page homePage;
 extern const Page settingsPage;
+#define RX_BUFFER_SIZE 64
+volatile uint8_t rxData;
+static char uartLine[RX_BUFFER_SIZE];
+static uint8_t uartIndex = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -98,6 +103,7 @@ int main(void)
   MX_TIM10_Init();
   MX_TIM8_Init();
   MX_TIM14_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -106,6 +112,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   HAL_TIM_PWM_Start(&htim10, TIM_CHANNEL_1);
   HAL_TIM_Encoder_Start(&htim8, TIM_CHANNEL_ALL);
+  HAL_UART_Receive_IT(&huart3, &rxData, 1);
 
   lcdInit();
   lcdFillBackground(BLACK);
@@ -115,7 +122,8 @@ int main(void)
   while (1)
   {
 
-	  HAL_Delay(1);
+	  HAL_Delay(10000);
+	  //Ui_UpdateDHTData(23.5, 40);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -193,6 +201,33 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 }
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if(huart->Instance == USART3)
+    {
+        if(rxData == '\n' || uartIndex >= RX_BUFFER_SIZE-1)
+        {
+            uartLine[uartIndex] = '\0';
+            Uart_parseDHTData(uartLine);
+            uartIndex = 0;
+        }
+        else
+        {
+            uartLine[uartIndex++] = rxData;
+        }
+
+        // restart IT reception
+        HAL_UART_Receive_IT(&huart3, &rxData, 1);
+    }
+}
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if(huart->Instance == USART3)
+    {
+        transmit_it_flag = 0;
+    }
+}
 /* USER CODE END 4 */
 
 /**
